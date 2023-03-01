@@ -22,17 +22,12 @@ import puppeteer from 'puppeteer';
 
     await page.waitForSelector(company_td_Selector)
     
-    let res = {}
-    const data = await page.$$eval('#ctl00_cphMain_dvDatosContribuyentes tbody tr', trs => trs.map((tr) => {
-        return {
-           column:  tr.cells.item(0).innerText,
-           value: tr.cells.item(1).innerText,
-        }
-    }));
+    const data = await page.$$eval('#ctl00_cphMain_dvDatosContribuyentes tbody tr', trs => Object.assign(...trs.map(tr => {
+        let obj = {}
+        obj[`${tr.cells.item(0).innerText}`] = tr.cells.item(1).innerText
+        return obj
+    })));
     console.log(data);
-
-    data.forEach(m=> res[m.column] = m.value)
-    console.log(JSON.stringify(res))
 
 
     browser.close()
