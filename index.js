@@ -1,36 +1,24 @@
-import puppeteer from 'puppeteer';
+import { FetchRawHtml } from './fetch.js'
+import { JSDOM } from 'jsdom';
+import { parse } from 'node-html-parser';
 
 (async () => {
-    const rnc_input_id = '#ctl00_cphMain_txtRNCCedula'
-    const rnc = '130334269'
-    // const rnc = process.argv[2]
-    const url = 'https://www.dgii.gov.do/app/WebApps/ConsultasWeb/consultas/rnc.aspx'
-    const button_Id = '#ctl00_cphMain_btnBuscarPorRNC'
-    const company_td_Selector = '#ctl00_cphMain_dvDatosContribuyentes > tbody > tr:nth-child(3) > td:nth-child(2)'
+    const res = await FetchRawHtml('130334269')
+    const document = new JSDOM(res).window.document
+    // const document = parse(res)
 
-    const browser = await puppeteer.launch(
-        // {
-        //     headless: false,
-        //     slowMo: 250
-        // }
-        );
+    let selector = '#ctl00_cphMain_dvDatosContribuyentes tbody tr';
+    // let obj = {}
+    // Array.from(document.querySelectorAll(selector)).forEach(m => 
+    //     obj[`${m.childNodes[1].textContent}`]=m.childNodes[2].textContent
+    // )
+    // console.log(obj)
 
-    const page = await browser.newPage();
-    await page.goto(url);
-    await page.type(rnc_input_id,rnc)
-    await page.click(button_Id)
+    let rnc = Array.from(document.querySelectorAll(selector)).reduce((acum,curr) => 
+        Object.assign(acum,{
+            [`${curr.childNodes[1].textContent}`]:curr.childNodes[2].textContent
+        })
+    ,{})
+    console.log(rnc)
 
-    await page.waitForSelector(company_td_Selector)
-    
-    const data = await page.$$eval('#ctl00_cphMain_dvDatosContribuyentes tbody tr', trs => Object.assign(...trs.map(tr => {
-        let obj = {}
-        obj[`${tr.cells.item(0).innerText}`] = tr.cells.item(1).innerText
-        return obj
-    })));
-    console.log(data);
-
-
-    browser.close()
-
-    console.log('browser closed')
 })();
