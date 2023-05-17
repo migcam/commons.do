@@ -1,5 +1,7 @@
 import { GetAxiosCookieJarWrapper } from '../Helpers';
-import { BCRD_RATE_URL, USD_RATE_URL } from '../urls';
+
+export const BCRD_RATE_URL : string = 'https://www.bancentral.gov.do/SectorExterno/HistoricoTasas'
+export const USD_RATE_URL : string = 'https://www.bancentral.gov.do/Home/GetActualExchangeRate'
 
 export class BCRD {
     public static async GetTodayUSDExchangeRate(){

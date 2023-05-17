@@ -1,5 +1,6 @@
 import axios from "axios";
-import { PAYROLL_URL } from "../urls";
+
+export const PAYROLL_URL : string = 'https://api.transparencia.gob.do/api/nominas';
 
 export class Payroll{
     static async GetPayroll(params : PayrollParams){
