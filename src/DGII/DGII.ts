@@ -1,6 +1,7 @@
 import parse from "node-html-parser";
 import { Company } from "./Company";
-import axios from 'axios';
+import { GetAxiosCookieJarWrapper } from "../Helpers";
+import { RNC_URL } from "../urls";
 
 export class DGII{
  
@@ -39,23 +40,26 @@ export class DGII{
 
     private static async GetRawHTML(rnc : string) : Promise<string> 
     { 
+        let client = GetAxiosCookieJarWrapper();
+        let document = parse(
+            (await client.get(RNC_URL)).data
+        );
+
         let config = {
             method: 'post',
-            url: 'https://www.dgii.gov.do/app/WebApps/ConsultasWeb/consultas/rnc.aspx',
-            headers: { 
+            url: RNC_URL,
+            headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36', 
             },
             data : {
-                ctl00$smMain: 'ctl00$cphMain$upBusqueda|ctl00$cphMain$btnBuscarPorRNC',
-                __VIEWSTATE:'/wEPDwUKMTkxNDA2Nzc4Nw9kFgJmD2QWAgIBD2QWAgIDD2QWAmYPZBYCAgEPZBYCAgUPZBYEAgUPPCsADwEADxYEHgtfIURhdGFCb3VuZGceC18hSXRlbUNvdW50ZmRkAgcPPCsADQBkGAIFH2N0bDAwJGNwaE1haW4kZ3ZCdXNjUmF6b25Tb2NpYWwPZ2QFI2N0bDAwJGNwaE1haW4kZHZEYXRvc0NvbnRyaWJ1eWVudGVzD2dkM6A6zdloNYs/efZ4JU/LIN3TDKM=',
-                __EVENTVALIDATION :'/wEWBQLj6vfLDALqq//bBAKC/r/9AwKhwMi7BAKKnIvVCUYxKuo9/DDpyc38di1xIRjCtI3M',
-                ctl00$cphMain$txtRNCCedula: rnc,
-                ctl00$cphMain$btnBuscarPorRNC:'Buscar'
-            }    
+                __VIEWSTATE : document.querySelector('#__VIEWSTATE')?.attributes['value'],
+                __EVENTVALIDATION : document.querySelector('#__EVENTVALIDATION')?.attributes['value'],
+                ctl00$cphMain$txtRNCCedula : rnc,
+                ctl00$cphMain$btnBuscarPorRNC : 'Buscar'
+            }
         }
 
-        let response = await axios.request(config)
+        let response = await client.request(config)
         return JSON.stringify(response.data);
     }
 

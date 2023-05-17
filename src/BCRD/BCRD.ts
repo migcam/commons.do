@@ -1,6 +1,5 @@
-import axios from 'axios'
-import { wrapper } from 'axios-cookiejar-support'
-import { CookieJar } from 'tough-cookie';
+import { GetAxiosCookieJarWrapper } from '../Helpers';
+import { BCRD_RATE_URL, USD_RATE_URL } from '../urls';
 
 export class BCRD {
     public static async GetTodayUSDExchangeRate(){
@@ -10,12 +9,11 @@ export class BCRD {
 
     public static async GetActualExchangeRate() : Promise<GetActualExchangeRateResult>{
         //TODO: refactor
-        let jar = new CookieJar();
-        let client = wrapper(axios.create({ jar }));
+        let client = GetAxiosCookieJarWrapper();
         
-        await client.head('https://www.bancentral.gov.do/SectorExterno/HistoricoTasas')
+        await client.head(BCRD_RATE_URL)
 
-        let response = await client.get('https://www.bancentral.gov.do/Home/GetActualExchangeRate')
+        let response = await client.get(USD_RATE_URL)
 
         return (response.data as BcrdResponse).result;
 
