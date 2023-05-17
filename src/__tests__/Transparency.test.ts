@@ -1,4 +1,4 @@
-import {Payroll, PayrollParams} from '../Transparency/payroll'
+import {Payroll, PayrollParams} from '../payroll'
 
 test('GetPayroll', async () => {
     let res = await Payroll.GetPayroll({

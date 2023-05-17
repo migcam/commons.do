@@ -1,4 +1,4 @@
-import { GetAxiosCookieJarWrapper } from '../Helpers';
+import { GetAxiosCookieJarWrapper } from './Helpers';
 
 export const BCRD_RATE_URL : string = 'https://www.bancentral.gov.do/SectorExterno/HistoricoTasas'
 export const USD_RATE_URL : string = 'https://www.bancentral.gov.do/Home/GetActualExchangeRate'

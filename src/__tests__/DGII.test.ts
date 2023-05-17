@@ -1,4 +1,4 @@
-import { DGII } from "../DGII/DGII";
+import { DGII } from "../DGII";
 
 test('GetCompanyFromRNC', async () => {
     let company = await DGII.GetCompanyFromRNC('401506254')

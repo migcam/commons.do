@@ -1,6 +1,5 @@
 import parse from "node-html-parser";
-import { Company } from "./Company";
-import { GetAxiosCookieJarWrapper } from "../Helpers";
+import { GetAxiosCookieJarWrapper } from "./Helpers";
 
 export const RNC_URL : string = 'https://www.dgii.gov.do/app/WebApps/ConsultasWeb/consultas/rnc.aspx';
 export const NCF_URL : string = 'https://dgii.gov.do/app/WebApps/ConsultasWeb2/ConsultasWeb/consultas/ncf.aspx';
@@ -65,4 +64,15 @@ export class DGII{
         return JSON.stringify(response.data);
     }
 
+}
+
+export interface Company{
+    id : string,
+    socialReason : string,
+    comercialName : string,
+    category : string,
+    paymentRegime : string,
+    status : string,
+    economicActivity : string,
+    socialAdministration : string
 }
