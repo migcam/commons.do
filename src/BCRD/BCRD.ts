@@ -13,7 +13,7 @@ export class BCRD {
         let jar = new CookieJar();
         let client = wrapper(axios.create({ jar }));
         
-        await client.get('https://www.bancentral.gov.do/SectorExterno/HistoricoTasas')
+        await client.head('https://www.bancentral.gov.do/SectorExterno/HistoricoTasas')
 
         let response = await client.get('https://www.bancentral.gov.do/Home/GetActualExchangeRate')
 
