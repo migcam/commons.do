@@ -1,5 +1,5 @@
-import parse from "node-html-parser";
-import { GetAxiosCookieJarWrapper } from "./Helpers";
+import axios from "axios";
+import { parse } from "node-html-parser";
 
 export const RNC_URL : string = 'https://www.dgii.gov.do/app/WebApps/ConsultasWeb/consultas/rnc.aspx';
 export const NCF_URL : string = 'https://dgii.gov.do/app/WebApps/ConsultasWeb2/ConsultasWeb/consultas/ncf.aspx';
@@ -41,9 +41,8 @@ export class DGII{
 
     private static async GetRawHTML(rnc : string) : Promise<string> 
     { 
-        let client = GetAxiosCookieJarWrapper();
         let document = parse(
-            (await client.get(RNC_URL)).data
+            (await axios.get(RNC_URL)).data
         );
 
         let config = {
@@ -60,7 +59,7 @@ export class DGII{
             }
         }
 
-        let response = await client.request(config)
+        let response = await axios.request(config)
         return JSON.stringify(response.data);
     }
 
