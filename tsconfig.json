@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "NodeNext",
+    // "moduleResolution": "node",
     "declaration": true,
     "outDir": "./dist",
     "sourceMap":true,

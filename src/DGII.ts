@@ -1,13 +1,13 @@
 import axios from "axios";
 import { parse } from "node-html-parser";
 
-export const RNC_URL : string = 'https://www.dgii.gov.do/app/WebApps/ConsultasWeb/consultas/rnc.aspx';
-export const NCF_URL : string = 'https://dgii.gov.do/app/WebApps/ConsultasWeb2/ConsultasWeb/consultas/ncf.aspx';
+export namespace DGII {
+    export const RNC_URL : string = 'https://www.dgii.gov.do/app/WebApps/ConsultasWeb/consultas/rnc.aspx';
+    export const NCF_URL : string = 'https://dgii.gov.do/app/WebApps/ConsultasWeb2/ConsultasWeb/consultas/ncf.aspx';
 
-export class DGII{
  
-    public static async GetCompanyFromRNC(rnc : string): Promise<Company>{
-        let res: any = await this.GetCompanyJSONFromRNC(rnc);
+    export async function GetCompanyFromRNC(rnc : string): Promise<Company>{
+        let res: any = await GetCompanyJSONFromRNC(rnc);
         
         return {
             id:res['Cédula/RNC'],
@@ -21,11 +21,11 @@ export class DGII{
         }
     }
 
-    private static async GetCompanyJSONFromRNC(rnc : string): Promise<any>{
+    async function GetCompanyJSONFromRNC(rnc : string): Promise<any>{
         if(rnc.length != 9 && rnc.length != 11)
             throw new Error("This is not an RNC o Cedula");
     
-        let rawHtml = await this.GetRawHTML(rnc)
+        let rawHtml = await GetRawHTML(rnc)
         let document = parse(rawHtml)
     
         let selector = 'tr';
@@ -39,7 +39,7 @@ export class DGII{
         return res;
     }
 
-    private static async GetRawHTML(rnc : string) : Promise<string> 
+    async function GetRawHTML(rnc : string) : Promise<string> 
     { 
         let document = parse(
             (await axios.get(RNC_URL)).data

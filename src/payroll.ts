@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const PAYROLL_URL : string = 'https://api.transparencia.gob.do/api/nominas';
+export namespace Payroll{
+    export const PAYROLL_URL : string = 'https://api.transparencia.gob.do/api/nominas';
 
-export class Payroll{
-    static async GetPayroll(params : PayrollParams){
+    async function GetPayroll(params : PayrollParams){
 
         let config = {
             method: 'get',
@@ -19,16 +19,16 @@ export class Payroll{
         return JSON.stringify(response.data);
 
     }
-}
 
-export interface PayrollParams{
-    page: number
-    periodo: string
-    nombres: string
-    apellidos: string
-    institucion: string
-    cargo: string
-    lugar: string
-    genero: string
-    estatus: string
+    export interface PayrollParams{
+        page: number
+        periodo: string
+        nombres: string
+        apellidos: string
+        institucion: string
+        cargo: string
+        lugar: string
+        genero: string
+        estatus: string
+    }
 }

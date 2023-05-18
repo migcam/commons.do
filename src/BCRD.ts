@@ -1,17 +1,21 @@
-import { GetAxiosCookieJarWrapper } from './Helpers';
+import { CookieJar } from 'tough-cookie';
+import { wrapper } from 'axios-cookiejar-support';
+import axios from 'axios';
 
-export const BCRD_RATE_URL : string = 'https://www.bancentral.gov.do/SectorExterno/HistoricoTasas'
-export const USD_RATE_URL : string = 'https://www.bancentral.gov.do/Home/GetActualExchangeRate'
+export  namespace BCRD {
 
-export class BCRD {
-    public static async GetTodayUSDExchangeRate(){
-        let rawRate = await this.GetActualExchangeRate();
+    export const BCRD_RATE_URL : string = 'https://www.bancentral.gov.do/SectorExterno/HistoricoTasas'
+    export const USD_RATE_URL : string = 'https://www.bancentral.gov.do/Home/GetActualExchangeRate'
+
+    export async function GetTodayUSDExchangeRate(): Promise<number>{
+        let rawRate = await GetActualExchangeRate();
         return rawRate.actualPurchaseValue
     }
 
-    public static async GetActualExchangeRate() : Promise<GetActualExchangeRateResult>{
+    async function GetActualExchangeRate() : Promise<GetActualExchangeRateResult>{
         //TODO: refactor
-        let client = GetAxiosCookieJarWrapper();
+        let jar = new CookieJar();
+        let client =  wrapper(axios.create({ jar }));
         
         await client.head(BCRD_RATE_URL)
 
@@ -20,30 +24,30 @@ export class BCRD {
         return (response.data as BcrdResponse).result;
 
     }
-}
 
-export interface BcrdResponse {
-    result: GetActualExchangeRateResult
-    targetUrl: any
-    success: boolean
-    error: any
-    unAuthorizedRequest: boolean
-    __abp: boolean
+
+    interface BcrdResponse {
+        result: GetActualExchangeRateResult
+        targetUrl: any
+        success: boolean
+        error: any
+        unAuthorizedRequest: boolean
+        __abp: boolean
+    }
+
+    interface GetActualExchangeRateResult {
+        actualPurchaseValue: number
+        actualPurchaseInteranualValue: number
+        actualPurchaseAccumulatedValue: number
+        actualSellingValue: number
+        actualSellingInteranualValue: number
+        actualSellingAccumulatedValue: number
+        date: Date
+        actualPurchaseInteranualValueFormatted: string
+        actualPurchaseAccumulatedValueFormatted: string
+        actualPurchaseValueFormatted: string
+        actualSellingInteranualValueFormatted: string
+        actualSellingAccumulatedValueFormatted: string
+        actualSellingValueFormatted: string
+    }
 }
-  
-export interface GetActualExchangeRateResult {
-    actualPurchaseValue: number
-    actualPurchaseInteranualValue: number
-    actualPurchaseAccumulatedValue: number
-    actualSellingValue: number
-    actualSellingInteranualValue: number
-    actualSellingAccumulatedValue: number
-    date: Date
-    actualPurchaseInteranualValueFormatted: string
-    actualPurchaseAccumulatedValueFormatted: string
-    actualPurchaseValueFormatted: string
-    actualSellingInteranualValueFormatted: string
-    actualSellingAccumulatedValueFormatted: string
-    actualSellingValueFormatted: string
-}
-  
