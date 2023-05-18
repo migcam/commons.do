@@ -1,7 +1,7 @@
-import {Payroll, PayrollParams} from '../src/payroll'
+import { Transparency } from '../src/Transparency'
 
 test('GetPayroll', async () => {
-    let res = await Payroll.GetPayroll({
+    let res = await Transparency.GetPayroll({
         page: 1,
         periodo: '20230301',
         nombres: 'oliver',
@@ -15,4 +15,4 @@ test('GetPayroll', async () => {
 
     expect(res).toBeTruthy();
 
-},25000);
+},30000);

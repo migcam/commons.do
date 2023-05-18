@@ -2,7 +2,7 @@ import { CookieJar } from 'tough-cookie';
 import { wrapper } from 'axios-cookiejar-support';
 import axios from 'axios';
 
-export  namespace BCRD {
+export module BCRD {
 
     export const BCRD_RATE_URL : string = 'https://www.bancentral.gov.do/SectorExterno/HistoricoTasas'
     export const USD_RATE_URL : string = 'https://www.bancentral.gov.do/Home/GetActualExchangeRate'
@@ -13,9 +13,7 @@ export  namespace BCRD {
     }
 
     async function GetActualExchangeRate() : Promise<GetActualExchangeRateResult>{
-        //TODO: refactor
-        let jar = new CookieJar();
-        let client =  wrapper(axios.create({ jar }));
+        let client = wrapper(axios.create({ jar: new CookieJar() }));
         
         await client.head(BCRD_RATE_URL)
 

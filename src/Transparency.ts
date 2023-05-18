@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export namespace Payroll{
+export module Transparency{
     export const PAYROLL_URL : string = 'https://api.transparencia.gob.do/api/nominas';
 
-    async function GetPayroll(params : PayrollParams){
+    export async function GetPayroll(params : PayrollParams){
 
         let config = {
             method: 'get',
