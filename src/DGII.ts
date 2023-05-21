@@ -1,6 +1,8 @@
 import axios from "axios";
 import { parse } from "node-html-parser";
 
+export default DGII;
+
 export module DGII {
     export const RNC_URL : string = 'https://www.dgii.gov.do/app/WebApps/ConsultasWeb/consultas/rnc.aspx';
     export const NCF_URL : string = 'https://dgii.gov.do/app/WebApps/ConsultasWeb2/ConsultasWeb/consultas/ncf.aspx';

@@ -1,5 +1,7 @@
 import axios from "axios";
 
+export default Transparency;
+
 export module Transparency{
     export const PAYROLL_URL : string = 'https://api.transparencia.gob.do/api/nominas';
 

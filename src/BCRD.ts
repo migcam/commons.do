@@ -2,6 +2,8 @@ import { CookieJar } from 'tough-cookie';
 import { wrapper } from 'axios-cookiejar-support';
 import axios from 'axios';
 
+export default BCRD;
+
 export module BCRD {
 
     export const BCRD_RATE_URL : string = 'https://www.bancentral.gov.do/SectorExterno/HistoricoTasas'
