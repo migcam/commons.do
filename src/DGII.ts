@@ -27,11 +27,11 @@ export module DGII {
             throw new Error("This is not an RNC o Cedula");
     
         let rawHtml = await GetRawHTML(rnc)
-        let document = parse(rawHtml)
+        let rawDoc = parse(rawHtml)
     
         let selector = 'tr';
     
-        let res = Array.from(document.querySelectorAll(selector)).reduce((acum,curr) => 
+        let res = Array.from(rawDoc.querySelectorAll(selector)).reduce((acum,curr) => 
             Object.assign(acum,{
                 [`${curr.childNodes[1].textContent}`]:curr.childNodes[2].textContent
             })
@@ -42,7 +42,7 @@ export module DGII {
 
     async function GetRawHTML(rnc : string) : Promise<string> 
     { 
-        let document = parse((await axios.get(RNC_URL)).data);
+        let rawDoc = parse((await axios.get(RNC_URL)).data);
 
         let config = {
             method: 'POST',
@@ -51,8 +51,8 @@ export module DGII {
                 'Content-Type': 'application/x-www-form-urlencoded', 
             },
             data : {
-                __VIEWSTATE : document.querySelector('#__VIEWSTATE')?.attributes['value'],
-                __EVENTVALIDATION : document.querySelector('#__EVENTVALIDATION')?.attributes['value'],
+                __VIEWSTATE : rawDoc.querySelector('#__VIEWSTATE')?.attributes['value'],
+                __EVENTVALIDATION : rawDoc.querySelector('#__EVENTVALIDATION')?.attributes['value'],
                 ctl00$cphMain$txtRNCCedula : rnc,
                 ctl00$cphMain$btnBuscarPorRNC : 'Buscar'
             }
@@ -79,10 +79,10 @@ export module DGII {
             throw new Error("This is not an RNC o Cedula");
     
         let rawHtml = await ValidateNonElectronicNCF(rnc,ncf)
-        let document = parse(rawHtml)
+        let rawDoc = parse(rawHtml)
     
         let selector = 'tr';
-        let res = document.querySelectorAll(selector).reduce((acum,curr) => 
+        let res = rawDoc.querySelectorAll(selector).reduce((acum,curr) => 
             Object.assign(acum,{
                 [`${curr.childNodes[1].textContent}`]:curr.childNodes[3].childNodes[1].textContent
             })
@@ -98,7 +98,7 @@ export module DGII {
         if(ncf.length != 11 && ncf.length != 13)
             throw new Error("This is not a NCF");
 
-        let document = parse((await axios.get(NCF_URL)).data);
+        let rawDoc = parse((await axios.get(NCF_URL)).data);
 
         var config = {
             method: 'POST',
@@ -108,8 +108,8 @@ export module DGII {
               'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
             },
             data: {
-              __VIEWSTATE: document.querySelector('#__VIEWSTATE')?.attributes['value'],
-              __EVENTVALIDATION: document.querySelector('#__EVENTVALIDATION')?.attributes['value'],
+              __VIEWSTATE: rawDoc.querySelector('#__VIEWSTATE')?.attributes['value'],
+              __EVENTVALIDATION: rawDoc.querySelector('#__EVENTVALIDATION')?.attributes['value'],
               ctl00$cphMain$txtRNC: rnc,
               ctl00$cphMain$txtNCF:  ncf,
               __ASYNCPOST: 'true',
