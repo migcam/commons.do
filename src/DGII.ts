@@ -1,4 +1,4 @@
-import axios from "axios";
+import * as  superagent from 'superagent'
 import { parse } from "node-html-parser";
 
 export default DGII;
@@ -41,25 +41,20 @@ export module DGII {
     }
 
     async function GetRawHTML(rnc : string) : Promise<string> 
-    { 
-        let rawDoc = parse((await axios.get(RNC_URL)).data);
+    {
+        let rawDoc  = parse((await superagent.get(RNC_URL)).text)
 
-        let config = {
-            method: 'POST',
-            url: RNC_URL,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded', 
-            },
-            data : {
-                __VIEWSTATE : rawDoc.querySelector('#__VIEWSTATE')?.attributes['value'],
-                __EVENTVALIDATION : rawDoc.querySelector('#__EVENTVALIDATION')?.attributes['value'],
-                ctl00$cphMain$txtRNCCedula : rnc,
-                ctl00$cphMain$btnBuscarPorRNC : 'Buscar'
-            }
-        }
+        let response = await superagent
+                    .post(RNC_URL)
+                    .set('Content-Type','application/x-www-form-urlencoded')
+                    .send({
+                        __VIEWSTATE : rawDoc.querySelector('#__VIEWSTATE')?.attributes['value'],
+                        __EVENTVALIDATION : rawDoc.querySelector('#__EVENTVALIDATION')?.attributes['value'],
+                        ctl00$cphMain$txtRNCCedula : rnc,
+                        ctl00$cphMain$btnBuscarPorRNC : 'Buscar'
+                    });
 
-        let response = await axios.request(config)
-        return JSON.stringify(response.data);
+        return response.text;
     }
 
     export async function GetCompanyFromRNCNCF(rnc:string, ncf:string) : Promise<NCFResult>{
@@ -98,27 +93,23 @@ export module DGII {
         if(ncf.length != 11 && ncf.length != 13)
             throw new Error("This is not a NCF");
 
-        let rawDoc = parse((await axios.get(NCF_URL)).data);
+        let rawDoc  = parse((await superagent.get(NCF_URL)).text)
 
-        var config = {
-            method: 'POST',
-            url: NCF_URL,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
-            },
-            data: {
-              __VIEWSTATE: rawDoc.querySelector('#__VIEWSTATE')?.attributes['value'],
-              __EVENTVALIDATION: rawDoc.querySelector('#__EVENTVALIDATION')?.attributes['value'],
-              ctl00$cphMain$txtRNC: rnc,
-              ctl00$cphMain$txtNCF:  ncf,
-              __ASYNCPOST: 'true',
-              ctl00$cphMain$btnConsultar: 'Buscar'
-            }
-        };
+        let response = await superagent
+            .post(NCF_URL)
+            .set('Content-Type','application/x-www-form-urlencoded; charset=UTF-8')
+            .set('User-Agent','Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion')
+            .send({
+                __VIEWSTATE: rawDoc.querySelector('#__VIEWSTATE')?.attributes['value'],
+                __EVENTVALIDATION: rawDoc.querySelector('#__EVENTVALIDATION')?.attributes['value'],
+                ctl00$cphMain$txtRNC: rnc,
+                ctl00$cphMain$txtNCF:  ncf,
+                __ASYNCPOST: 'true',
+                ctl00$cphMain$btnConsultar: 'Buscar'
+            })
 
-        let response = await axios.request(config)
-        return JSON.stringify(response.data);
+        return response.text;
+
     }
 
 

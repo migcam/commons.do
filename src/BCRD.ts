@@ -1,6 +1,4 @@
-import { CookieJar } from 'tough-cookie';
-import { wrapper } from 'axios-cookiejar-support';
-import axios from 'axios';
+import { agent } from 'superagent';
 
 export default BCRD;
 
@@ -14,17 +12,24 @@ export module BCRD {
         return rawRate.actualPurchaseValue
     }
 
+    // Axios implementation
+    // async function GetActualExchangeRate() : Promise<GetActualExchangeRateResult>{
+    //     let client = wrapper(axios.create({ jar: new CookieJar() }));
+    //     await client.head(BCRD_RATE_URL)
+    //     let response = await client.get(USD_RATE_URL)
+    //     return (response.data as BcrdResponse).result;
+    // }
+
     async function GetActualExchangeRate() : Promise<GetActualExchangeRateResult>{
-        let client = wrapper(axios.create({ jar: new CookieJar() }));
-        
-        await client.head(BCRD_RATE_URL)
+        let myagent = agent();
+        await myagent.head(BCRD_RATE_URL)
+        let response = await myagent
+                .get(USD_RATE_URL).
+                set('User-Agent','Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion');
 
-        let response = await client.get(USD_RATE_URL)
-
-        return (response.data as BcrdResponse).result;
+        return (JSON.parse(response.text) as  BcrdResponse).result;
 
     }
-
 
     interface BcrdResponse {
         result: GetActualExchangeRateResult

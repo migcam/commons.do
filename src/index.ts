@@ -1,6 +1,6 @@
-import BCRD from "./BCRD.js";
-import DGII from "./DGII.js";
-import Transparency from "./Transparency.js";
+import BCRD from "./BCRD";
+import DGII from "./DGII";
+import Transparency from "./Transparency";
 
 export {
     DGII,
