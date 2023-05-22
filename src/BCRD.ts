@@ -1,4 +1,4 @@
-import { agent } from 'superagent';
+import * as  superagent from 'superagent'
 
 export default BCRD;
 
@@ -21,14 +21,10 @@ export module BCRD {
     // }
 
     async function GetActualExchangeRate() : Promise<GetActualExchangeRateResult>{
-        let myagent = agent();
+        let myagent = superagent.agent();
         await myagent.head(BCRD_RATE_URL)
-        let response = await myagent
-                .get(USD_RATE_URL).
-                set('User-Agent','Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion');
-
+        let response = await myagent.get(USD_RATE_URL)
         return (JSON.parse(response.text) as  BcrdResponse).result;
-
     }
 
     interface BcrdResponse {

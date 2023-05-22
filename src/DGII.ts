@@ -92,7 +92,7 @@ export module DGII {
         
         if(ncf.length != 11 && ncf.length != 13)
             throw new Error("This is not a NCF");
-
+        
         let rawDoc  = parse((await superagent.get(NCF_URL)).text)
 
         let response = await superagent
