@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "NodeNext",
-    // "moduleResolution": "node",
+    // "module": "node16",
+    // "moduleResolution": "no",
+    "lib": ["dom", "es2015"],
     "declaration": true,
     "outDir": "./dist",
     "sourceMap":true,
